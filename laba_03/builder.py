@@ -1,5 +1,3 @@
-"""Builder: пошаговое создание героя."""
-
 from hero import Hero
 from abstract_factory import StarterKitFactory
 

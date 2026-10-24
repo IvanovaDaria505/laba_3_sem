@@ -1,5 +1,3 @@
-"""Предметы игры и паттерн Prototype."""
-
 from dataclasses import dataclass, field
 
 

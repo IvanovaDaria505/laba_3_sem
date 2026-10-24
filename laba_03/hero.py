@@ -1,5 +1,3 @@
-"""Герой игры."""
-
 from dataclasses import dataclass
 from singleton import Dice
 from prototype import Item

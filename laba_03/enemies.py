@@ -1,5 +1,3 @@
-"""Класс противников."""
-
 from dataclasses import dataclass
 from singleton import Dice
 

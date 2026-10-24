@@ -1,5 +1,3 @@
-"""Демонстрация пяти паттернов проектирования в RPG."""
-
 from abstract_factory import (
     WarriorKitFactory,
     RangerKitFactory,
@@ -160,7 +158,6 @@ def demonstrate_builder(catalog):
 def demonstrate_factory_method(catalog, hero):
     print("\n===== Фабричный метод =====")
 
-    # Разные подклассы создают разных противников.
     forest = Forest()
     crypt = Crypt()
 
@@ -271,7 +268,6 @@ def demonstrate_factory_method(catalog, hero):
 def main():
     catalog = ItemCatalog()
 
-    # Фиксируем seed для повторяемой демонстрации.
     Dice.get_instance().reseed(7)
 
     demonstrate_singleton()
