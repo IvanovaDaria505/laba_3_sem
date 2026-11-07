@@ -82,7 +82,6 @@ class Item:
 
 
 class ItemCatalog:
-    """Каталог хранит прототипы и выдаёт их копии."""
 
     def __init__(self):
         self._prototypes = {

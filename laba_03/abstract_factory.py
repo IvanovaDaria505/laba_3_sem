@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from prototype import Item, ItemCatalog
 
-
 class StarterKitFactory(ABC):
 
     @abstractmethod
