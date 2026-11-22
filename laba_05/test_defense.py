@@ -8,7 +8,6 @@ from chain import (
 )
 from damage import Damage
 
-
 class TestDefense(unittest.TestCase):
     """Поведенческий паттерн: Цепочка обязанностей."""
 
@@ -115,7 +114,6 @@ class TestDefense(unittest.TestCase):
         self.assertFalse(damage.evaded)
 
         following.handle.assert_called_once_with(damage)
-
 
 if __name__ == "__main__":
     unittest.main()
