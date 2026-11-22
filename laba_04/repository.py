@@ -8,6 +8,7 @@ class FileHeroRepository:
     def find_all(self):
         if not self.path.exists():
             return []
+
         raw = self.path.read_text(encoding="utf-8").strip()
         return json.loads(raw) if raw else []
 
@@ -18,10 +19,19 @@ class FileHeroRepository:
         return None
 
     def save(self, hero_data):
-        heroes = [h for h in self.find_all() if h["name"] != hero_data["name"]]
+        heroes = [
+            h for h in self.find_all()
+            if h["name"] != hero_data["name"]
+        ]
+
         heroes.append(hero_data)
+
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(heroes, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+        self.path.write_text(
+            json.dumps(heroes, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8"
+        )
 
 class CachingHeroRepository:
     def __init__(self, target):
@@ -30,7 +40,11 @@ class CachingHeroRepository:
 
     def _cached(self):
         if self.cache is None:
-            self.cache = {hero["name"]: hero for hero in self.target.find_all()}
+            self.cache = {
+                hero["name"]: hero
+                for hero in self.target.find_all()
+            }
+
         return self.cache
 
     def find_by_name(self, name):
