@@ -10,18 +10,15 @@ from repository import (
     CachingHeroRepository
 )
 
-
 class TestCachingHeroRepository(unittest.TestCase):
-    """Структурный паттерн: Proxy (кэширование репозитория)."""
 
     def test_lazy_loading_and_single_storage_read(self):
-        storage = Mock()
-
         heroes = [
-            Mock(name="Артур"),
-            Mock(name="Мерлин")
+            {"name": "Артур", "level": 5},
+            {"name": "Мерлин", "level": 10}
         ]
 
+        storage = Mock()
         storage.find_all.return_value = heroes
 
         cache = CachingHeroRepository(storage)
@@ -34,38 +31,42 @@ class TestCachingHeroRepository(unittest.TestCase):
         storage.find_all.assert_called_once_with()
 
         self.assertEqual(first, second)
+        self.assertEqual(len(first), 2)
 
     def test_find_by_name(self):
+        heroes = [
+            {"name": "Артур", "level": 5},
+            {"name": "Мерлин", "level": 10}
+        ]
+
         storage = Mock()
-
-        hero = Mock()
-        hero.name = "Артур"
-
-        storage.find_by_name.return_value = hero
+        storage.find_all.return_value = heroes
 
         cache = CachingHeroRepository(storage)
 
         result = cache.find_by_name("Артур")
 
-        self.assertIs(result, hero)
-
-        storage.find_by_name.assert_called_once_with(
-            "Артур"
-        )
+        self.assertEqual(result["name"], "Артур")
+        self.assertEqual(result["level"], 5)
 
     def test_save_delegates_to_storage(self):
         storage = Mock()
+        storage.find_all.return_value = []
+
         cache = CachingHeroRepository(storage)
 
-        hero = Mock()
+        hero = {"name": "Артур", "level": 5}
 
         cache.save(hero)
 
         storage.save.assert_called_once_with(hero)
 
+        self.assertEqual(
+            cache.find_by_name("Артур"),
+            hero
+        )
 
 class TestFileHeroRepository(unittest.TestCase):
-    """Интеграция: JSON-репозиторий и файловая система."""
 
     def test_save_creates_json_file(self):
         with TemporaryDirectory() as directory:
@@ -73,20 +74,19 @@ class TestFileHeroRepository(unittest.TestCase):
 
             repository = FileHeroRepository(path)
 
-            hero = Mock()
-            hero.name = "Артур"
+            hero = {
+                "name": "Артур",
+                "level": 5
+            }
 
             repository.save(hero)
 
             self.assertTrue(path.is_file())
 
-            with path.open(
-                "r",
-                encoding="utf-8"
-            ) as file:
+            with path.open("r", encoding="utf-8") as file:
                 data = json.load(file)
 
-            self.assertTrue(data)
+            self.assertEqual(data, [hero])
 
     def test_missing_file_returns_empty_list(self):
         with TemporaryDirectory() as directory:
@@ -94,11 +94,7 @@ class TestFileHeroRepository(unittest.TestCase):
 
             repository = FileHeroRepository(path)
 
-            self.assertEqual(
-                repository.find_all(),
-                []
-            )
-
+            self.assertEqual(repository.find_all(), [])
 
 if __name__ == "__main__":
     unittest.main()
