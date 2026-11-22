@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-import random
+
 
 @dataclass
 class Hit:
     damage: int
+
 
 class Enemy:
     def __init__(self, name, health, damage, experience_reward):
@@ -24,13 +25,26 @@ class Enemy:
     def alive(self):
         return self.health > 0
 
+
 class Goblin(Enemy):
     def __init__(self):
-        super().__init__("Гоблин", 50, 7, 40)
+        super().__init__(
+            name="Гоблин",
+            health=50,
+            damage=7,
+            experience_reward=40
+        )
+
 
 class Dragon(Enemy):
     def __init__(self):
-        super().__init__("Дракон", 260, 26, 500)
+        super().__init__(
+            name="Дракон",
+            health=260,
+            damage=26,
+            experience_reward=500
+        )
+
 
 class EnemyDecorator:
     def __init__(self, wrapped):
@@ -38,6 +52,7 @@ class EnemyDecorator:
 
     def __getattr__(self, name):
         return getattr(self.wrapped, name)
+
 
 class LegendaryEnemy(EnemyDecorator):
     @property
@@ -51,6 +66,7 @@ class LegendaryEnemy(EnemyDecorator):
     def experience_reward(self):
         return self.wrapped.experience_reward * 2
 
+
 class ArmoredEnemy(EnemyDecorator):
     @property
     def name(self):
@@ -58,6 +74,7 @@ class ArmoredEnemy(EnemyDecorator):
 
     def receive_hit(self, amount):
         return self.wrapped.receive_hit(max(1, amount // 2))
+
 
 class WindfuryEnemy(EnemyDecorator):
     @property
@@ -69,4 +86,7 @@ class WindfuryEnemy(EnemyDecorator):
 
     @property
     def experience_reward(self):
-        return self.wrapped.experience_reward + self.wrapped.experience_reward // 2
+        return (
+            self.wrapped.experience_reward
+            + self.wrapped.experience_reward // 2
+        )
