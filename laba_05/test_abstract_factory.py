@@ -7,7 +7,6 @@ from abstract_factory import (
 )
 from prototype import ItemCatalog, FIERY
 
-
 class TestAbstractFactory(unittest.TestCase):
     """Порождающий паттерн: Абстрактная фабрика."""
 
@@ -63,7 +62,6 @@ class TestAbstractFactory(unittest.TestCase):
             weapon.name,
             "Тренировочный меч"
         )
-
 
 if __name__ == "__main__":
     unittest.main()
